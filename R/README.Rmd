@@ -1,0 +1,126 @@
+<!-- R Markdown Documentation, DO NOT EDIT THE PLAIN MARKDOWN VERSION OF THIS FILE -->
+
+<!-- Copyright 2014 Google Inc. All rights reserved. -->
+
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!-- you may not use this file except in compliance with the License. -->
+<!-- You may obtain a copy of the License at -->
+
+<!--     http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!-- Unless required by applicable law or agreed to in writing, software -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS, -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and -->
+<!-- limitations under the License. -->
+
+Literate Programming with R and BigQuery
+========================================================
+
+R Markdown Introduction
+-------------------------
+
+This is an [R Markdown](http://rmarkdown.rstudio.com/) document.  By using RMarkdown, we can write R code in a [literate programming](http://en.wikipedia.org/wiki/Literate_programming) style interleaving snippets of code within narrative content.  This document can be read, but it can also be executed.  Most importantly though, it can be rendered so that the results of an R analysis at a point in time are captured.
+
+It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  You can embed an R code chunk like this:
+```{r default data, comment=NA}
+summary(cars)
+```
+
+You can also embed plots, for example:
+```{r plot example, fig.align="center"}
+plot(cars)
+```
+
+See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
+
+BigQuery Analysis of Variants
+--------------
+
+Now let us move onto [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
+
+If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
+
+```{r one time setup, eval=FALSE}
+### Only needed the first time around
+install.packages("devtools")
+devtools::install_github("assertthat")
+devtools::install_github("bigrquery")
+```
+
+Next we will load our needed packages into our session:
+```{r initialize}
+library(bigrquery)
+library(ggplot2)
+library(xtable)
+```
+
+And write a little convenience function:
+```{r}
+project <- "google.com:biggene"                           # put your projectID here
+table <- "genomics-public-data:platinum_genomes.variants" # put your table here
+DisplayAndDispatchQuery <- function(queryUri) {
+  # Read in the SQL from a file or URL.
+  querySql <- readChar(queryUri, nchars=1e6)
+  # Find and replace the table name placeholder with our table name.
+  querySql <- sub("_THE_TABLE_", table, querySql, fixed=TRUE)
+  # Display the updated SQL.
+  cat(querySql)
+  # Dispatch the query to BigQuery for execution.
+  query_exec(querySql, project)
+}
+```
+
+Now we're ready to execute our query, bringing the results down to our R session for further examination:
+```{r comment=NA}
+result <- DisplayAndDispatchQuery("../sql/sample-variant-counts-for-brca1.sql")
+```
+
+Let us examine our query result:
+```{r result, comment=NA}
+head(result)
+summary(result)
+str(result)
+```
+We can see that what we get back from bigrquery is an R dataframe holding our query results.
+
+Data Visualization
+-------------------
+Now that our results are in a dataframe, we can easily apply data visualization to our results:
+```{r viz, fig.align="center"}
+ggplot(result, aes(x=call_set_name, y=variant_count)) +
+  geom_bar(stat="identity") + coord_flip() +
+  ggtitle("Count of Variants Per Sample")
+```
+and its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
+
+We can then examine the variant level data more closely:
+```{r comment=NA}
+result <- DisplayAndDispatchQuery("../sql/variant-level-data-for-brca1.sql")
+```
+Number of rows returned by this query: `r nrow(result)`.
+
+Displaying the first few rows of the dataframe of results:
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=NA, results="asis"}
+print(xtable(head(result)), type="html", include.rownames=F)
+```
+
+
+And also work with the sample level data: 
+```{r comment=NA}
+result <- DisplayAndDispatchQuery("../sql/sample-level-data-for-brca1.sql")
+```
+Number of rows returned by this query: `r nrow(result)`.
+
+
+Displaying the first few rows of the dataframe of results:
+```{r echo=FALSE, message=FALSE, warning=FALSE, comment=NA, results="asis"}
+print(xtable(head(result)), type="html", include.rownames=F)
+```
+
+Provenance
+-------------------
+Lastly, let us capture version information about R and loaded packages for the sake of provenance.
+```{r provenance, comment=NA}
+sessionInfo()
+```
