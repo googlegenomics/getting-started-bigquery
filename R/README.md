@@ -179,7 +179,8 @@ ggplot(result, aes(x=call_set_name, y=variant_count)) +
 ```
 
 <img src="figure/viz.png" title="plot of chunk viz" alt="plot of chunk viz" style="display: block; margin: auto;" />
-and its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
+
+Its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
 
 We can then examine the variant level data more closely:
 
@@ -211,11 +212,12 @@ ORDER BY
   start,
   alternate_bases
 ```
+
 Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 10:54:25 2014 -->
+<!-- Thu Oct  2 10:59:50 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> quality </TH> <TH> filter </TH> <TH> names </TH> <TH> num_samples </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD align="right"> 733.47 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   7 </TD> </TR>
@@ -263,7 +265,7 @@ Number of rows returned by this query: 1777.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 10:54:31 2014 -->
+<!-- Thu Oct  2 10:59:56 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> call_call_set_name </TH> <TH> genotype </TH> <TH> call_phaseset </TH> <TH> call_genotype_likelihood </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12878 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>

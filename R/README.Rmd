@@ -28,7 +28,7 @@ summary(cars)
 ```
 
 You can also embed plots, for example:
-```{r plot example, fig.align="center"}
+```{r plot example, fig.align="center", fig.width=10}
 plot(cars)
 ```
 
@@ -87,12 +87,13 @@ We can see that what we get back from bigrquery is an R dataframe holding our qu
 Data Visualization
 -------------------
 Now that our results are in a dataframe, we can easily apply data visualization to our results:
-```{r viz, fig.align="center"}
+```{r viz, fig.align="center", fig.width=10}
 ggplot(result, aes(x=call_set_name, y=variant_count)) +
   geom_bar(stat="identity") + coord_flip() +
   ggtitle("Count of Variants Per Sample")
 ```
-and its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
+
+Its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
 
 We can then examine the variant level data more closely:
 ```{r comment=NA}
