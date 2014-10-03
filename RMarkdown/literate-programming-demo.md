@@ -57,10 +57,9 @@ If you have not used the [bigrquery](https://github.com/hadley/bigrquery) packag
 
 
 ```r
-### Only needed the first time around
+### To install the bigrquery package
 install.packages("devtools")
-devtools::install_github("assertthat")
-devtools::install_github("bigrquery")
+devtools::install_github("hadley/bigrquery")
 ```
 
 Next we will load our needed packages into our session:
@@ -212,12 +211,11 @@ ORDER BY
   start,
   alternate_bases
 ```
-
 Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 10:59:50 2014 -->
+<!-- Thu Oct  2 19:04:40 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> quality </TH> <TH> filter </TH> <TH> names </TH> <TH> num_samples </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD align="right"> 733.47 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   7 </TD> </TR>
@@ -265,7 +263,7 @@ Number of rows returned by this query: 1777.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 10:59:56 2014 -->
+<!-- Thu Oct  2 19:04:46 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> call_call_set_name </TH> <TH> genotype </TH> <TH> call_phaseset </TH> <TH> call_genotype_likelihood </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12878 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
@@ -295,15 +293,16 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] knitr_1.6     xtable_1.7-3  ggplot2_1.0.0 bigrquery_0.1
+[1] xtable_1.7-3  ggplot2_1.0.0 bigrquery_0.1 knitr_1.6    
 
 loaded via a namespace (and not attached):
- [1] assertthat_0.1.0.99 colorspace_1.2-4    digest_0.6.4       
- [4] evaluate_0.5.5      formatR_1.0         grid_3.1.1         
- [7] gtable_0.1.2        htmltools_0.2.4     httpuv_1.3.0       
-[10] httr_0.5            jsonlite_0.9.11     labeling_0.3       
-[13] MASS_7.3-34         munsell_0.4.2       plyr_1.8.1         
-[16] proto_0.3-10        Rcpp_0.11.2         RCurl_1.95-4.3     
-[19] reshape2_1.4        rmarkdown_0.2.64    scales_0.2.4       
-[22] stringr_0.6.2       tools_3.1.1        
+ [1] assertthat_0.1.0.99 colorspace_1.2-4    devtools_1.5       
+ [4] digest_0.6.4        evaluate_0.5.5      formatR_1.0        
+ [7] grid_3.1.1          gtable_0.1.2        htmltools_0.2.4    
+[10] httpuv_1.3.0        httr_0.5            jsonlite_0.9.11    
+[13] labeling_0.3        MASS_7.3-34         memoise_0.2.1      
+[16] munsell_0.4.2       parallel_3.1.1      plyr_1.8.1         
+[19] proto_0.3-10        Rcpp_0.11.2         RCurl_1.95-4.3     
+[22] reshape2_1.4        rmarkdown_0.2.64    scales_0.2.4       
+[25] stringr_0.6.2       tools_3.1.1         whisker_0.3-2      
 ```

@@ -13,8 +13,8 @@ Getting Started
 ```
 SELECT
   reference_name,
-  COUNT(reference_name) AS num_variants,
-  COUNT(call.call_set_name) AS num_variant_calls
+  COUNT(reference_name) AS num_records,
+  COUNT(call.call_set_name) AS num_calls
 FROM
   [genomics-public-data:platinum_genomes.variants]
 GROUP BY

@@ -42,10 +42,9 @@ Now let us move onto [literate programming](http://en.wikipedia.org/wiki/Literat
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
 ```{r one time setup, eval=FALSE}
-### Only needed the first time around
+### To install the bigrquery package
 install.packages("devtools")
-devtools::install_github("assertthat")
-devtools::install_github("bigrquery")
+devtools::install_github("hadley/bigrquery")
 ```
 
 Next we will load our needed packages into our session:
