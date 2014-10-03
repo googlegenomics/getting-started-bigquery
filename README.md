@@ -1,7 +1,9 @@
 getting-started-bigquery
 ========================
 
-The repository contains examples of how to use BigQuery with genomics data. The code within each language-specific folder demonstrates the same set of queries upon the Platinum Genomes dataset.  For more detail about this data see [Google Genomics Public Data](https://developers.google.com/genomics/datasets/platinum-genomes).
+The repository contains a handful of simple examples of using BigQuery with genomics data. The code within each language-specific folder demonstrates the same set of queries upon the Platinum Genomes dataset.  For more detail about this data see [Google Genomics Public Data](https://developers.google.com/genomics/datasets/platinum-genomes).
+
+For more advanced examples, see [BigQuery Examples](https://github.com/googlegenomics/bigquery-examples)
 
 Getting Started
 -------------------------------------
