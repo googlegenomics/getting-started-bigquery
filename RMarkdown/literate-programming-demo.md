@@ -22,36 +22,12 @@ R Markdown Introduction
 
 This is an [R Markdown](http://rmarkdown.rstudio.com/) document.  By using RMarkdown, we can write R code in a [literate programming](http://en.wikipedia.org/wiki/Literate_programming) style interleaving snippets of code within narrative content.  This document can be read, but it can also be executed.  Most importantly though, it can be rendered so that the results of an R analysis at a point in time are captured.
 
-It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  You can embed an R code chunk like this:
-
-```r
-summary(cars)
-```
-
-```
-     speed           dist    
- Min.   : 4.0   Min.   :  2  
- 1st Qu.:12.0   1st Qu.: 26  
- Median :15.0   Median : 36  
- Mean   :15.4   Mean   : 43  
- 3rd Qu.:19.0   3rd Qu.: 56  
- Max.   :25.0   Max.   :120  
-```
-
-You can also embed plots, for example:
-
-```r
-plot(cars)
-```
-
-<img src="figure/plot example.png" title="plot of chunk plot example" alt="plot of chunk plot example" style="display: block; margin: auto;" />
-
-See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
+It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
 
 BigQuery Analysis of Variants
 --------------
 
-Now let us move onto [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
+Now let's proceed with a specific example of [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
 
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
@@ -73,7 +49,7 @@ library(xtable)
 And write a little convenience function:
 
 ```r
-project <- "google.com:biggene"                           # put your projectID here
+project <- "genomics-public-data"                           # put your projectID here
 table <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
@@ -215,7 +191,7 @@ Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 19:04:40 2014 -->
+<!-- Fri Oct  3 13:41:42 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> quality </TH> <TH> filter </TH> <TH> names </TH> <TH> num_samples </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD align="right"> 733.47 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   7 </TD> </TR>
@@ -263,7 +239,7 @@ Number of rows returned by this query: 1777.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct  2 19:04:46 2014 -->
+<!-- Fri Oct  3 13:41:47 2014 -->
 <TABLE border=1>
 <TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> call_call_set_name </TH> <TH> genotype </TH> <TH> call_phaseset </TH> <TH> call_genotype_likelihood </TH>  </TR>
   <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12878 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
@@ -296,13 +272,12 @@ other attached packages:
 [1] xtable_1.7-3  ggplot2_1.0.0 bigrquery_0.1 knitr_1.6    
 
 loaded via a namespace (and not attached):
- [1] assertthat_0.1.0.99 colorspace_1.2-4    devtools_1.5       
- [4] digest_0.6.4        evaluate_0.5.5      formatR_1.0        
- [7] grid_3.1.1          gtable_0.1.2        htmltools_0.2.4    
-[10] httpuv_1.3.0        httr_0.5            jsonlite_0.9.11    
-[13] labeling_0.3        MASS_7.3-34         memoise_0.2.1      
-[16] munsell_0.4.2       parallel_3.1.1      plyr_1.8.1         
-[19] proto_0.3-10        Rcpp_0.11.2         RCurl_1.95-4.3     
-[22] reshape2_1.4        rmarkdown_0.2.64    scales_0.2.4       
-[25] stringr_0.6.2       tools_3.1.1         whisker_0.3-2      
+ [1] assertthat_0.1.0.99 colorspace_1.2-4    digest_0.6.4       
+ [4] evaluate_0.5.5      formatR_1.0         grid_3.1.1         
+ [7] gtable_0.1.2        htmltools_0.2.4     httr_0.5           
+[10] jsonlite_0.9.11     labeling_0.3        MASS_7.3-34        
+[13] munsell_0.4.2       plyr_1.8.1          proto_0.3-10       
+[16] Rcpp_0.11.2         RCurl_1.95-4.3      reshape2_1.4       
+[19] rmarkdown_0.2.64    scales_0.2.4        stringr_0.6.2      
+[22] tools_3.1.1        
 ```

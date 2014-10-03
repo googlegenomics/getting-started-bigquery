@@ -1,12 +1,4 @@
 
-## ----default data, comment=NA--------------------------------------------
-summary(cars)
-
-
-## ----plot example, fig.align="center", fig.width=10----------------------
-plot(cars)
-
-
 ## ----one time setup, eval=FALSE------------------------------------------
 ## ### To install the bigrquery package
 ## install.packages("devtools")
@@ -20,7 +12,7 @@ library(xtable)
 
 
 ## ------------------------------------------------------------------------
-project <- "google.com:biggene"                           # put your projectID here
+project <- "genomics-public-data"                           # put your projectID here
 table <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.

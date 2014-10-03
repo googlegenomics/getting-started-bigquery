@@ -6,7 +6,7 @@ library(bigrquery)
 # devtools::install_github("hadley/bigrquery")
 
 # Put your projectID here
-project <- "google.com:biggene"
+project <- "genomics-public-data"
 
 # Change the table if you want to query your own data
 table <- "genomics-public-data:platinum_genomes.variants"

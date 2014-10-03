@@ -22,22 +22,12 @@ R Markdown Introduction
 
 This is an [R Markdown](http://rmarkdown.rstudio.com/) document.  By using RMarkdown, we can write R code in a [literate programming](http://en.wikipedia.org/wiki/Literate_programming) style interleaving snippets of code within narrative content.  This document can be read, but it can also be executed.  Most importantly though, it can be rendered so that the results of an R analysis at a point in time are captured.
 
-It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  You can embed an R code chunk like this:
-```{r default data, comment=NA}
-summary(cars)
-```
-
-You can also embed plots, for example:
-```{r plot example, fig.align="center", fig.width=10}
-plot(cars)
-```
-
-See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
+It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
 
 BigQuery Analysis of Variants
 --------------
 
-Now let us move onto [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
+Now let's proceed with a specific example of [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
 
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
@@ -56,7 +46,7 @@ library(xtable)
 
 And write a little convenience function:
 ```{r}
-project <- "google.com:biggene"                           # put your projectID here
+project <- "genomics-public-data"                           # put your projectID here
 table <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
