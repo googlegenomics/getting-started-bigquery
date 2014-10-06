@@ -1,7 +1,7 @@
 getting-started-bigquery
 ========================
 
-The repository contains a handful of simple examples of using BigQuery with genomics data. The code within each language-specific folder demonstrates the same set of queries upon the Platinum Genomes dataset.  For more detail about this data see [Google Genomics Public Data](https://developers.google.com/genomics/datasets/platinum-genomes).
+The repository contains a handful of simple examples of using BigQuery with genomics data. The code within each language-specific folder demonstrates the same set of queries upon the Platinum Genomes dataset.  For more detail about this data see [Google Genomics Public Data](https://developers.google.com/genomics/data/platinum-genomes).
 
 For more advanced examples, see [BigQuery Examples](https://github.com/googlegenomics/bigquery-examples)
 
@@ -29,14 +29,14 @@ View the results!
 Google Genomics Public Data
 -------------------------------------
 
-To add the [Google Genomics Public Data](https://developers.google.com/genomics/datasets/platinum-genomes) datasets to your project so that they show up in the left-hand naviation pane.
+To add the [Google Genomics Public Data](https://developers.google.com/genomics/data/platinum-genomes) datasets to your project so that they show up in the left-hand naviation pane.
 
   1. Click on the drop down icon beside your project name in the left navigation pane.
   1. Pick _‘Switch to project’_ in the menu, and _‘Display project...’_ in the submenu
   <img src="figure/display.png" title="Display project" alt="Display Project" style="display: block; margin: auto;" />
   1. Enter `genomics-public-data` in the _‘Add Project’_ dialog.
   <img src="figure/add.png" title="Add Project" alt="Add Project" style="display: block; margin: auto;" />
-Now the [Google Genomics Public Data](https://developers.google.com/genomics/datasets/platinum-genomes) datasets appear in the left navigation pane of the BigQuery [Browser Tool](https://bigquery.cloud.google.com).
+Now the [Google Genomics Public Data](https://developers.google.com/genomics/data/platinum-genomes) datasets appear in the left navigation pane of the BigQuery [Browser Tool](https://bigquery.cloud.google.com).
 
 What next?
 ----------
