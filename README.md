@@ -6,6 +6,8 @@ genomics data. The code within each language-specific folder demonstrates the
 same set of queries upon the Platinum Genomes dataset.  For more detail about
 this data see [Google Genomics Public Data](https://cloud.google.com/genomics/data/platinum-genomes).
 
+For more advanced examples, see [BigQuery Examples](https://github.com/googlegenomics/bigquery-examples)
+
 All languages will require a Project ID from a project that has the BigQuery API enabled.
 
 * Follow the [BigQuery sign up instructions](https://developers.google.com/bigquery/sign-up)
