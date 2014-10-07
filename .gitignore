@@ -1,5 +1,5 @@
 *.Rproj
-*.html
+RMarkdown/*.html
 .Rproj.user
 .Rhistory
 .RData
