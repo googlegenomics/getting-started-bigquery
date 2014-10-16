@@ -12,13 +12,13 @@ library(xtable)
 
 
 ## ------------------------------------------------------------------------
-project <- "genomics-public-data"                           # put your projectID here
-table <- "genomics-public-data:platinum_genomes.variants" # put your table here
+project <- "genomics-public-data"                            # put your projectID here
+theTable <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
   # Find and replace the table name placeholder with our table name.
-  querySql <- sub("_THE_TABLE_", table, querySql, fixed=TRUE)
+  querySql <- sub("_THE_TABLE_", theTable, querySql, fixed=TRUE)
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
