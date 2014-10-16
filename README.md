@@ -56,6 +56,7 @@ What next?
 ----------
   * New to BigQuery?
     + See the [query reference](https://developers.google.com/bigquery/query-reference).
+    + See the BigQuery book [Google BigQuery Analytics](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118824822.html)
   * New to working with variants?
     + See an overview of the [VCF data format](http://vcftools.sourceforge.net/VCF-poster.pdf).
   * Looking for more sample queries?
