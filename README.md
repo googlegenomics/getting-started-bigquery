@@ -54,10 +54,15 @@ BigQuery datasets to the browser tool so that they show up in the left-hand navi
 
 What next?
 ----------
+  * Try the "getting started" samples in one or more languages by navigating to the subdirectory in this repository for the desired langauage:
+    + [SQL](./sql)
+    + [RMarkdown](./RMarkdown)
+    + [R](./R)
+    + [JavaScript](./javascript)
   * New to BigQuery?
     + See the [query reference](https://developers.google.com/bigquery/query-reference).
     + See the BigQuery book [Google BigQuery Analytics](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118824822.html)
   * New to working with variants?
     + See an overview of the [VCF data format](http://vcftools.sourceforge.net/VCF-poster.pdf).
-  * Looking for more sample queries?
+  * Looking for more advanced sample queries?
     + See [BigQuery Examples](https://github.com/googlegenomics/bigquery-examples).
