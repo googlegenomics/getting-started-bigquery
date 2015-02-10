@@ -14,10 +14,7 @@
 <!-- See the License for the specific language governing permissions and -->
 <!-- limitations under the License. -->
 
-Literate Programming with R and BigQuery
-========================================================
-
-# BigQuery Analysis of Variants
+# Literate Programming with R and BigQuery
 
 ## R Markdown Introduction
 
@@ -80,7 +77,7 @@ DisplayAndDispatchQuery <- function(queryUri) {
 }
 ```
 
-## Run a Query in R
+## Running a Query in R
 
 Now we're ready to execute our query, bringing the results down to our R session for further examination:
 
@@ -209,7 +206,7 @@ Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
-<!-- Tue Feb 10 11:45:29 2015 -->
+<!-- Tue Feb 10 11:52:36 2015 -->
 <table border=1>
 <tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
@@ -257,7 +254,7 @@ Number of rows returned by this query: 1777.
 
 Displaying the first few rows of the dataframe of results:
 <!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
-<!-- Tue Feb 10 11:45:30 2015 -->
+<!-- Tue Feb 10 11:52:41 2015 -->
 <table border=1>
 <tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> call_call_set_name </th> <th> genotype </th> <th> call_phaseset </th> <th> call_genotype_likelihood </th>  </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12878 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
