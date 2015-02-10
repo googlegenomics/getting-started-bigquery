@@ -17,25 +17,24 @@
 Literate Programming with R and BigQuery
 ========================================================
 
-R Markdown Introduction
--------------------------
+# BigQuery Analysis of Variants
+
+## R Markdown Introduction
 
 This is an [R Markdown](http://rmarkdown.rstudio.com/) document.  By using RMarkdown, we can write R code in a [literate programming](http://en.wikipedia.org/wiki/Literate_programming) style interleaving snippets of code within narrative content.  This document can be read, but it can also be executed.  Most importantly though, it can be rendered so that the results of an R analysis at a point in time are captured.
 
 It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
 
-BigQuery Analysis of Variants
---------------
-
 Now let's proceed with a specific example of [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
+
+## Setup
 
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
 
 ```r
 ### To install the bigrquery package
-install.packages("devtools")
-devtools::install_github("hadley/bigrquery")
+install.packages("bigrquery")
 ```
 
 Next we will load our needed packages into our session:
@@ -46,11 +45,29 @@ library(ggplot2)
 library(xtable)
 ```
 
+And set a few variables:
+
+```r
+######################[ CHANGE ME ]##################################
+# This codelab assumes that the current working directory is where the Rmd file resides.
+setwd("/YOUR/PATH/TO/getting-started-bigquery/RMarkdown")
+
+# Set the Google Cloud Platform project id under which these queries will run.
+project <- "YOUR-PROJECT-ID"
+#####################################################################
+```
+
+
+```r
+# By default this codelab runs upon the Illumina Platinum Genomes Variants.
+# Change the table here if you wish to run these queries against a different table.
+theTable <- "genomics-public-data:platinum_genomes.variants"
+```
+
+
 And write a little convenience function:
 
 ```r
-project <- "genomics-public-data"                            # put your projectID here
-theTable <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
@@ -62,6 +79,8 @@ DisplayAndDispatchQuery <- function(queryUri) {
   query_exec(querySql, project)
 }
 ```
+
+## Run a Query in R
 
 Now we're ready to execute our query, bringing the results down to our R session for further examination:
 
@@ -123,13 +142,13 @@ summary(result)
 ```
 
 ```
- call_set_name      variant_count
- Length:17          Min.   : 27  
- Class :character   1st Qu.: 33  
- Mode  :character   Median : 41  
-                    Mean   :103  
-                    3rd Qu.:198  
-                    Max.   :211  
+ call_set_name      variant_count  
+ Length:17          Min.   : 27.0  
+ Class :character   1st Qu.: 33.0  
+ Mode  :character   Median : 41.0  
+                    Mean   :103.2  
+                    3rd Qu.:198.0  
+                    Max.   :211.0  
 ```
 
 ```r
@@ -143,8 +162,8 @@ str(result)
 ```
 We can see that what we get back from bigrquery is an R dataframe holding our query results.
 
-Data Visualization
--------------------
+## Data Visualization of Query Results
+
 Now that our results are in a dataframe, we can easily apply data visualization to our results:
 
 ```r
@@ -153,7 +172,7 @@ ggplot(result, aes(x=call_set_name, y=variant_count)) +
   ggtitle("Count of Variants Per Sample")
 ```
 
-<img src="figure/viz.png" title="plot of chunk viz" alt="plot of chunk viz" style="display: block; margin: auto;" />
+<img src="figure/viz-1.png" title="plot of chunk viz" alt="plot of chunk viz" style="display: block; margin: auto;" />
 
 Its clear to see that number of variants within BRCA1 for each sample corresponds roughly to two levels.
 
@@ -181,8 +200,7 @@ WHERE
   reference_name = 'chr17'
   AND start BETWEEN 41196311
   AND 41277499
-HAVING
-  alternate_bases IS NOT NULL
+OMIT RECORD IF EVERY(alternate_bases IS NULL)
 ORDER BY
   start,
   alternate_bases
@@ -190,17 +208,17 @@ ORDER BY
 Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct 16 14:45:16 2014 -->
-<TABLE border=1>
-<TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> quality </TH> <TH> filter </TH> <TH> names </TH> <TH> num_samples </TH>  </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD align="right"> 733.47 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   7 </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196820 </TD> <TD align="right"> 41196822 </TD> <TD> CT </TD> <TD> C </TD> <TD align="right"> 63.74 </TD> <TD> LowQD </TD> <TD>  </TD> <TD align="right">   1 </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196820 </TD> <TD align="right"> 41196823 </TD> <TD> CTT </TD> <TD> C,CT </TD> <TD align="right"> 314.59 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   3 </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196840 </TD> <TD align="right"> 41196841 </TD> <TD> G </TD> <TD> T </TD> <TD align="right"> 85.68 </TD> <TD> TruthSensitivityTranche99.90to100.00,LowQD </TD> <TD>  </TD> <TD align="right">   2 </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41197273 </TD> <TD align="right"> 41197274 </TD> <TD> C </TD> <TD> A </TD> <TD align="right"> 1011.08 </TD> <TD> PASS </TD> <TD>  </TD> <TD align="right">   7 </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41197938 </TD> <TD align="right"> 41197939 </TD> <TD> A </TD> <TD> AT </TD> <TD align="right"> 86.95 </TD> <TD> LowQD </TD> <TD>  </TD> <TD align="right">   3 </TD> </TR>
-   </TABLE>
+<!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
+<!-- Tue Feb 10 11:45:29 2015 -->
+<table border=1>
+<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196822 </td> <td> CT </td> <td> C </td> <td align="right"> 63.74 </td> <td> LowQD </td> <td>  </td> <td align="right">   1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196823 </td> <td> CTT </td> <td> C,CT </td> <td align="right"> 314.59 </td> <td> PASS </td> <td>  </td> <td align="right">   3 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196840 </td> <td align="right"> 41196841 </td> <td> G </td> <td> T </td> <td align="right"> 85.68 </td> <td> TruthSensitivityTranche99.90to100.00,LowQD </td> <td>  </td> <td align="right">   2 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41197273 </td> <td align="right"> 41197274 </td> <td> C </td> <td> A </td> <td align="right"> 1011.08 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41197938 </td> <td align="right"> 41197939 </td> <td> A </td> <td> AT </td> <td align="right"> 86.95 </td> <td> LowQD </td> <td>  </td> <td align="right">   3 </td> </tr>
+   </table>
 
 
 And also work with the sample level data: 
@@ -238,20 +256,20 @@ Number of rows returned by this query: 1777.
 
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.1.1 by xtable 1.7-3 package -->
-<!-- Thu Oct 16 14:45:21 2014 -->
-<TABLE border=1>
-<TR> <TH> reference_name </TH> <TH> start </TH> <TH> end </TH> <TH> reference_bases </TH> <TH> alternate_bases </TH> <TH> call_call_set_name </TH> <TH> genotype </TH> <TH> call_phaseset </TH> <TH> call_genotype_likelihood </TH>  </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12878 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12880 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12883 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12887 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12888 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-  <TR> <TD> chr17 </TD> <TD align="right"> 41196407 </TD> <TD align="right"> 41196408 </TD> <TD> G </TD> <TD> A </TD> <TD> NA12889 </TD> <TD> 0,1 </TD> <TD>  </TD> <TD align="right">  </TD> </TR>
-   </TABLE>
+<!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
+<!-- Tue Feb 10 11:45:30 2015 -->
+<table border=1>
+<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> call_call_set_name </th> <th> genotype </th> <th> call_phaseset </th> <th> call_genotype_likelihood </th>  </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12878 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12880 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12883 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12887 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12888 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12889 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+   </table>
 
-Provenance
--------------------
+## Provenance
+
 Lastly, let us capture version information about R and loaded packages for the sake of provenance.
 
 ```r
@@ -269,14 +287,17 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] xtable_1.7-3  ggplot2_1.0.0 bigrquery_0.1 knitr_1.6    
+[1] xtable_1.7-4         ggplot2_1.0.0        bigrquery_0.1.0     
+[4] knitr_1.7            BiocInstaller_1.16.0
 
 loaded via a namespace (and not attached):
- [1] assertthat_0.1.0.99 colorspace_1.2-4    digest_0.6.4       
- [4] evaluate_0.5.5      formatR_1.0         grid_3.1.1         
- [7] gtable_0.1.2        httr_0.5            jsonlite_0.9.12    
-[10] labeling_0.3        MASS_7.3-35         munsell_0.4.2      
-[13] plyr_1.8.1          proto_0.3-10        Rcpp_0.11.3        
-[16] RCurl_1.95-4.3      reshape2_1.4        scales_0.2.4       
-[19] stringr_0.6.2       tools_3.1.1        
+ [1] assertthat_0.1.0.99 colorspace_1.2-4    DBI_0.3.1          
+ [4] digest_0.6.4        dplyr_0.3.0.2       evaluate_0.5.5     
+ [7] formatR_1.0         grid_3.1.1          gtable_0.1.2       
+[10] htmltools_0.2.6     httr_0.6.1          jsonlite_0.9.13    
+[13] labeling_0.3        magrittr_1.0.1      MASS_7.3-35        
+[16] munsell_0.4.2       parallel_3.1.1      plyr_1.8.1         
+[19] proto_0.3-10        R6_2.0              Rcpp_0.11.3        
+[22] RCurl_1.95-4.3      reshape2_1.4        rmarkdown_0.3.10   
+[25] scales_0.2.4        stringr_0.6.2       tools_3.1.1        
 ```

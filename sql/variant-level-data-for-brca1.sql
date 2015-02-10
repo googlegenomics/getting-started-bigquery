@@ -15,8 +15,7 @@ WHERE
   reference_name = 'chr17'
   AND start BETWEEN 41196311
   AND 41277499
-HAVING
-  alternate_bases IS NOT NULL
+OMIT RECORD IF EVERY(alternate_bases IS NULL)
 ORDER BY
   start,
   alternate_bases

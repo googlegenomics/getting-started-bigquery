@@ -17,37 +17,52 @@
 Literate Programming with R and BigQuery
 ========================================================
 
-R Markdown Introduction
--------------------------
+# BigQuery Analysis of Variants
+
+## R Markdown Introduction
 
 This is an [R Markdown](http://rmarkdown.rstudio.com/) document.  By using RMarkdown, we can write R code in a [literate programming](http://en.wikipedia.org/wiki/Literate_programming) style interleaving snippets of code within narrative content.  This document can be read, but it can also be executed.  Most importantly though, it can be rendered so that the results of an R analysis at a point in time are captured.
 
 It is written in [Markdown](http://daringfireball.net/projects/markdown/syntax), a simple formatting syntax for authoring web pages.  See the [`rmarkdown` package](http://cran.r-project.org/web/packages/rmarkdown/index.html) for more detail about how to use RMarkdown from R.  [RStudio](http://www.rstudio.com/) has support for [R Markdown](http://rmarkdown.rstudio.com/) from its user interface.
 
-BigQuery Analysis of Variants
---------------
-
 Now let's proceed with a specific example of [literate programming](http://en.wikipedia.org/wiki/Literate_programming) for [BigQuery](https://developers.google.com/bigquery/).
+
+## Setup
 
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
 ```{r one time setup, eval=FALSE}
 ### To install the bigrquery package
-install.packages("devtools")
-devtools::install_github("hadley/bigrquery")
+install.packages("bigrquery")
 ```
 
 Next we will load our needed packages into our session:
-```{r initialize}
+```{r initialize, message=FALSE, warning=FALSE}
 library(bigrquery)
 library(ggplot2)
 library(xtable)
 ```
 
+And set a few variables:
+```{r eval=FALSE}
+######################[ CHANGE ME ]##################################
+# This codelab assumes that the current working directory is where the Rmd file resides.
+setwd("/YOUR/PATH/TO/getting-started-bigquery/RMarkdown")
+
+# Set the Google Cloud Platform project id under which these queries will run.
+project <- "YOUR-PROJECT-ID"
+#####################################################################
+```
+
+```{r}
+# By default this codelab runs upon the Illumina Platinum Genomes Variants.
+# Change the table here if you wish to run these queries against a different table.
+theTable <- "genomics-public-data:platinum_genomes.variants"
+```
+
+
 And write a little convenience function:
 ```{r}
-project <- "genomics-public-data"                            # put your projectID here
-theTable <- "genomics-public-data:platinum_genomes.variants" # put your table here
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
@@ -59,6 +74,8 @@ DisplayAndDispatchQuery <- function(queryUri) {
   query_exec(querySql, project)
 }
 ```
+
+## Run a Query in R
 
 Now we're ready to execute our query, bringing the results down to our R session for further examination:
 ```{r comment=NA}
@@ -73,8 +90,8 @@ str(result)
 ```
 We can see that what we get back from bigrquery is an R dataframe holding our query results.
 
-Data Visualization
--------------------
+## Data Visualization of Query Results
+
 Now that our results are in a dataframe, we can easily apply data visualization to our results:
 ```{r viz, fig.align="center", fig.width=10}
 ggplot(result, aes(x=call_set_name, y=variant_count)) +
@@ -108,8 +125,8 @@ Displaying the first few rows of the dataframe of results:
 print(xtable(head(result)), type="html", include.rownames=F)
 ```
 
-Provenance
--------------------
+## Provenance
+
 Lastly, let us capture version information about R and loaded packages for the sake of provenance.
 ```{r provenance, comment=NA}
 sessionInfo()
