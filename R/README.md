@@ -3,8 +3,7 @@
  1. If needed, install the [bigrquery](https://github.com/hadley/bigrquery#authentication) package.
  
    ```
-   install.packages("devtools")
-   devtools::install_github("hadley/bigrquery")
+   install.packages("bigrquery")
    ```
 
  2. From the R prompt set the working directory and run the script:

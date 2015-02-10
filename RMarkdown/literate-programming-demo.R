@@ -1,19 +1,32 @@
 
 ## ----one time setup, eval=FALSE------------------------------------------
 ## ### To install the bigrquery package
-## install.packages("devtools")
-## devtools::install_github("hadley/bigrquery")
+## install.packages("bigrquery")
 
 
-## ----initialize----------------------------------------------------------
+## ----initialize, message=FALSE, warning=FALSE----------------------------
 library(bigrquery)
 library(ggplot2)
 library(xtable)
 
 
+## ----eval=FALSE----------------------------------------------------------
+## ######################[ CHANGE ME ]##################################
+## # This codelab assumes that the current working directory is where the Rmd file resides.
+## setwd("/YOUR/PATH/TO/getting-started-bigquery/RMarkdown")
+## 
+## # Set the Google Cloud Platform project id under which these queries will run.
+## project <- "YOUR-PROJECT-ID"
+## #####################################################################
+
+
 ## ------------------------------------------------------------------------
-project <- "genomics-public-data"                            # put your projectID here
-theTable <- "genomics-public-data:platinum_genomes.variants" # put your table here
+# By default this codelab runs upon the Illumina Platinum Genomes Variants.
+# Change the table here if you wish to run these queries against a different table.
+theTable <- "genomics-public-data:platinum_genomes.variants"
+
+
+## ------------------------------------------------------------------------
 DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
