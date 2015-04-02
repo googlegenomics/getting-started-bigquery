@@ -29,7 +29,7 @@ View the results!
   * Try a few more queries in the [sql](./sql) subdirectory.
     + Replace `_THE_TABLE_` with `genomics-public-data:platinum_genomes.variants` or your own table if you have exported variants from Google Genomics to BigQuery.
   * New to BigQuery?
-    + See the [query reference](https://developers.google.com/bigquery/query-reference).
+    + See the [query reference](https://cloud.google.com/bigquery/query-reference).
     + See the BigQuery book [Google BigQuery Analytics](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118824822.html)
   * New to working with variants?
     + See an overview of the [VCF data format](http://vcftools.sourceforge.net/VCF-poster.pdf).
@@ -46,7 +46,7 @@ Instead of using the browser tool to send queries to BigQuery, you can use code 
   + [R](./R)
   + [JavaScript](./javascript)
 * All languages will require a Project ID from a project that has the BigQuery API enabled.
-  + Follow the [BigQuery sign up instructions](https://developers.google.com/bigquery/sign-up) if you do not yet have a valid project.  (Note: you do not need to enable billing for the small examples in this repository)
+  + Follow the [BigQuery sign up instructions](https://cloud.google.com/bigquery/sign-up) if you do not yet have a valid project.  (Note: you do not need to enable billing for the small examples in this repository)
   + You can find the Project ID for your new project in the
   [Google Developers Console](https://console.developers.google.com).
 
