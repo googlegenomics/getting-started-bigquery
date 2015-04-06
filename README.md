@@ -27,6 +27,9 @@ View the results!
 ## What next?
 ----------
   * Try a few more queries in the [sql](./sql) subdirectory.
+    + [variant-level-data-for-brca1.sql](./sql/variant-level-data-for-brca1.sql)
+    + [sample-level-data-for-brca1.sql](./sql/sample-level-data-for-brca1.sql)
+    + [sample-variant-counts-for-brca1.sql](./sql/sample-variant-counts-for-brca1.sql)
     + Replace `_THE_TABLE_` with `genomics-public-data:platinum_genomes.variants` or your own table if you have exported variants from Google Genomics to BigQuery.
   * New to BigQuery?
     + See the [query reference](https://cloud.google.com/bigquery/query-reference).
