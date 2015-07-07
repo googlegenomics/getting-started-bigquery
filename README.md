@@ -11,8 +11,8 @@ this data see [Google Genomics Public Data](https://cloud.google.com/genomics/da
 1. Click on **"Compose Query"**.
 1. Copy and paste the following query into the dialog box and click on **"Run Query"**:
 ```
-# Count the number of records we have in the dataset and the total number of
-# calls nested within those records.
+# Count the number of records (variant and reference segments) we have in the dataset
+# and the total number of calls nested within those records.
 # 
 # The source data for table genomics-public-data:platinum_genomes.variants
 # was gVCF so a record can be a particular variant or a non-variant segment.
