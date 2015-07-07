@@ -29,7 +29,9 @@ GROUP BY
 ORDER BY
   reference_name
 ```
+
 View the results!
+
 <img src="figure/result.png" title="Query Results" alt="Query Results" style="display: block; margin: auto;" />
 
 ## What next?
