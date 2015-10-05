@@ -12,10 +12,12 @@ SELECT
 FROM
   [_THE_TABLE_]
 WHERE
-  reference_name = 'chr17'
+  reference_name CONTAINS '17' # To match both 'chr17' and '17'
   AND start BETWEEN 41196311
   AND 41277499
-OMIT RECORD IF EVERY(alternate_bases IS NULL)
+# In some datasets, alternate_bases will be empty (therefore NULL) for non-variant segments.
+# In other datasets, alternate_bases will have the value "<NON_REF>" for non-variant segments.
+OMIT RECORD IF EVERY(alternate_bases IS NULL) OR EVERY(alternate_bases = "<NON_REF>")
 ORDER BY
   start,
   alternate_bases
