@@ -105,7 +105,7 @@ FROM (
   FROM
       [genomics-public-data:platinum_genomes.variants]
   WHERE
-    reference_name = 'chr17'
+    reference_name CONTAINS '17' # To match both 'chr17' and '17'
     AND start BETWEEN 41196311
     AND 41277499
   HAVING
@@ -194,10 +194,12 @@ SELECT
 FROM
   [genomics-public-data:platinum_genomes.variants]
 WHERE
-  reference_name = 'chr17'
+  reference_name CONTAINS '17' # To match both 'chr17' and '17'
   AND start BETWEEN 41196311
   AND 41277499
-OMIT RECORD IF EVERY(alternate_bases IS NULL)
+# In some datasets, alternate_bases will be empty (therefore NULL) for non-variant segments.
+# In other datasets, alternate_bases will have the value "<NON_REF>" for non-variant segments.
+OMIT RECORD IF EVERY(alternate_bases IS NULL) OR EVERY(alternate_bases = "<NON_REF>")
 ORDER BY
   start,
   alternate_bases
@@ -205,8 +207,8 @@ ORDER BY
 Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
-<!-- Tue Feb 10 11:52:36 2015 -->
+<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
+<!-- Mon Oct  5 16:50:18 2015 -->
 <table border=1>
 <tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
@@ -239,7 +241,7 @@ SELECT
 FROM
   [genomics-public-data:platinum_genomes.variants]
 WHERE
-  reference_name = 'chr17'
+  reference_name CONTAINS '17' # To match both 'chr17' and '17'
   AND start BETWEEN 41196311
   AND 41277499
 HAVING
@@ -253,8 +255,8 @@ Number of rows returned by this query: 1777.
 
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.1.1 by xtable 1.7-4 package -->
-<!-- Tue Feb 10 11:52:41 2015 -->
+<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
+<!-- Mon Oct  5 16:50:20 2015 -->
 <table border=1>
 <tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> call_call_set_name </th> <th> genotype </th> <th> call_phaseset </th> <th> call_genotype_likelihood </th>  </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12878 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
@@ -274,8 +276,9 @@ sessionInfo()
 ```
 
 ```
-R version 3.1.1 (2014-07-10)
-Platform: x86_64-apple-darwin13.1.0 (64-bit)
+R version 3.2.0 (2015-04-16)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: OS X 10.10.5 (Yosemite)
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -284,17 +287,15 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] xtable_1.7-4         ggplot2_1.0.0        bigrquery_0.1.0     
-[4] knitr_1.7            BiocInstaller_1.16.0
+[1] xtable_1.7-4    ggplot2_1.0.1   bigrquery_0.1.0 knitr_1.10.5   
 
 loaded via a namespace (and not attached):
- [1] assertthat_0.1.0.99 colorspace_1.2-4    DBI_0.3.1          
- [4] digest_0.6.4        dplyr_0.3.0.2       evaluate_0.5.5     
- [7] formatR_1.0         grid_3.1.1          gtable_0.1.2       
-[10] htmltools_0.2.6     httr_0.6.1          jsonlite_0.9.13    
-[13] labeling_0.3        magrittr_1.0.1      MASS_7.3-35        
-[16] munsell_0.4.2       parallel_3.1.1      plyr_1.8.1         
-[19] proto_0.3-10        R6_2.0              Rcpp_0.11.3        
-[22] RCurl_1.95-4.3      reshape2_1.4        rmarkdown_0.3.10   
-[25] scales_0.2.4        stringr_0.6.2       tools_3.1.1        
+ [1] Rcpp_0.11.6      rstudioapi_0.3.1 magrittr_1.5     MASS_7.3-40     
+ [5] munsell_0.4.2    colorspace_1.2-6 R6_2.1.0         stringr_1.0.0   
+ [9] httr_1.0.0       plyr_1.8.2       dplyr_0.4.1      tools_3.2.0     
+[13] parallel_3.2.0   grid_3.2.0       gtable_0.1.2     DBI_0.3.1       
+[17] htmltools_0.2.6  assertthat_0.1   digest_0.6.8     reshape2_1.4.1  
+[21] formatR_1.2      curl_0.9.3       evaluate_0.7.2   rmarkdown_0.7   
+[25] labeling_0.3     stringi_0.5-5    scales_0.2.4     jsonlite_0.9.17 
+[29] proto_0.3-10    
 ```
