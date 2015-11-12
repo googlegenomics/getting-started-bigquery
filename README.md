@@ -54,7 +54,7 @@ Alternate ways to work with BigQuery
 
 Instead of using the browser tool to send queries to BigQuery, you can use code in many languages to call the BigQuery API.
 
-* Try the "getting started" samples in one or more languages by navigating to the subdirectory in this repository for the desired langauage:
+* Try the "getting started" samples in one or more languages by navigating to the subdirectory in this repository for the desired language:
   + [RMarkdown](./RMarkdown)
   + [R](./R)
   + [JavaScript](./javascript)
