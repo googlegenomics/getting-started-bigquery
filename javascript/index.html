@@ -76,7 +76,7 @@ if (!clientId) {
 } else {
   // This code could also be modified to ask for access to the user's genomics data too
   // You just need one additional scope: 'https://www.googleapis.com/auth/genomics'
-  // And an additional library: {name: 'genomics', version: 'v1beta'}
+  // And an additional library: {name: 'genomics', version: 'v1'}
   $.initGenomics({clientId: clientId,
     scopes:['https://www.googleapis.com/auth/bigquery'],
     libraries: [{name: 'bigquery', version: 'v2'}]});
