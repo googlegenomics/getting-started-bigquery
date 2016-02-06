@@ -36,6 +36,10 @@ View the results!
 
 ## What next?
 ----------
+  * Work through the [Analyze variants using Google BigQuery](http://googlegenomics.readthedocs.org/en/latest/use_cases/analyze_variants/analyze_variants_with_bigquery.html) codelab.  The purpose of this codelab is to help you:
+    * learn how to use the Google BigQuery query tool
+    * learn valuable BigQuery SQL syntax
+    * become familiar with the variants table created by a Google Genomics variant export
   * Try a few more queries in the [sql](./sql) subdirectory.
     + [variant-level-data-for-brca1.sql](./sql/variant-level-data-for-brca1.sql)
     + [sample-level-data-for-brca1.sql](./sql/sample-level-data-for-brca1.sql)
