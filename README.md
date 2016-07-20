@@ -61,10 +61,10 @@ Instead of using the browser tool to send queries to BigQuery, you can use code 
 * Try the "getting started" samples in one or more languages by navigating to the subdirectory in this repository for the desired language:
   + [RMarkdown](./RMarkdown)
   + [R](./R)
-  + [JavaScript](./javascript)
 * All languages will require a Project ID from a project that has the BigQuery API enabled.
   + Follow the [BigQuery sign up instructions](https://cloud.google.com/bigquery/sign-up) if you do not yet have a valid project.  (Note: you do not need to enable billing for the small examples in this repository)
   + You can find the Project ID for your new project in the
-  [Google Developers Console](https://console.developers.google.com).
+  [Google Cloud Console](https://console.cloud.google.com).
 
-
+* For more information on accessing BigQuery from other languages, see:
+[Create A Simple Application With the API](https://cloud.google.com/bigquery/create-simple-app-api)

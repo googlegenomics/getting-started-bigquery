@@ -1,5 +1,10 @@
 # Getting started in javascript
 
+| Deprecated |
+|--------------------|
+| This example is deprecated. The Google Genomics v1beta2 API is scheduled for turndown on August 15, 2016. When the API is turned down, this example will cease to function. |
+| For an example of accessing the Google Genomics v1 API from Javascript, see the [Getting Started with the API](https://github.com/googlegenomics/getting-started-with-the-api/) repository. |
+
 1. Javascript requires a client ID in addition to the Project ID you already set up:
 
     1. First select your [BigQuery enabled project](https://console.developers.google.com/project/_/apiui/credential)
