@@ -29,8 +29,10 @@ Now let's proceed with a specific example of [literate programming](http://en.wi
 If you have not used the [bigrquery](https://github.com/hadley/bigrquery) package previously, you will likely need to do something like the following to get it installed:
 
 ```{r one time setup, eval=FALSE}
-### To install the bigrquery package
-install.packages("bigrquery")
+### To install the bigrquery package.  The currently released version 0.3.0 does not yet
+### have the parameter to use Standard SQL instead of Legacy SQL, so we install from github.
+library(devtools)
+install_github('rstats-db/bigrquery')
 ```
 
 Next we will load our needed packages into our session:
@@ -54,7 +56,7 @@ project <- "YOUR-PROJECT-ID"
 ```{r}
 # By default this codelab runs upon the Illumina Platinum Genomes Variants.
 # Change the table here if you wish to run these queries against a different table.
-theTable <- "genomics-public-data:platinum_genomes.variants"
+theTable <- "genomics-public-data.platinum_genomes.variants"
 ```
 
 
@@ -64,11 +66,11 @@ DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
   # Find and replace the table name placeholder with our table name.
-  querySql <- sub("_THE_TABLE_", theTable, querySql, fixed=TRUE)
+  querySql <- sub("@THE_TABLE", theTable, querySql, fixed=TRUE)
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
-  query_exec(querySql, project)
+  query_exec(querySql, project, useLegacySql = FALSE)
 }
 ```
 

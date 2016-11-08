@@ -2,22 +2,20 @@
 SELECT
   reference_name,
   start,
-  end,
+  `end`,
   reference_bases,
-  GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
+  ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
   quality,
-  GROUP_CONCAT(filter) WITHIN RECORD AS filter,
-  GROUP_CONCAT(names) WITHIN RECORD AS names,
-  COUNT(call.call_set_name) WITHIN RECORD AS num_samples,
+  ARRAY_TO_STRING(v.filter, ',') AS filter,
+  ARRAY_TO_STRING(v.names, ',') AS names,
+  ARRAY_LENGTH(v.call) AS num_samples
 FROM
-  [_THE_TABLE_]
+  `@THE_TABLE` v
 WHERE
-  reference_name CONTAINS '17' # To match both 'chr17' and '17'
-  AND start BETWEEN 41196311
-  AND 41277499
-# In some datasets, alternate_bases will be empty (therefore NULL) for non-variant segments.
-# In other datasets, alternate_bases will have the value "<NON_REF>" for non-variant segments.
-OMIT RECORD IF EVERY(alternate_bases IS NULL) OR EVERY(alternate_bases = "<NON_REF>")
+  reference_name IN ('17', 'chr17')
+  AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+  # Skip non-variant segments.
+  AND EXISTS (SELECT alt FROM UNNEST(v.alternate_bases) alt WHERE alt NOT IN ("<NON_REF>", "<*>"))
 ORDER BY
   start,
-  alternate_bases
+  alts

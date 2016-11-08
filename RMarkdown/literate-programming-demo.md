@@ -30,8 +30,10 @@ If you have not used the [bigrquery](https://github.com/hadley/bigrquery) packag
 
 
 ```r
-### To install the bigrquery package
-install.packages("bigrquery")
+### To install the bigrquery package.  The currently released version 0.3.0 does not yet
+### have the parameter to use Standard SQL instead of Legacy SQL, so we install from github.
+library(devtools)
+install_github('rstats-db/bigrquery')
 ```
 
 Next we will load our needed packages into our session:
@@ -58,7 +60,7 @@ project <- "YOUR-PROJECT-ID"
 ```r
 # By default this codelab runs upon the Illumina Platinum Genomes Variants.
 # Change the table here if you wish to run these queries against a different table.
-theTable <- "genomics-public-data:platinum_genomes.variants"
+theTable <- "genomics-public-data.platinum_genomes.variants"
 ```
 
 
@@ -69,11 +71,11 @@ DisplayAndDispatchQuery <- function(queryUri) {
   # Read in the SQL from a file or URL.
   querySql <- readChar(queryUri, nchars=1e6)
   # Find and replace the table name placeholder with our table name.
-  querySql <- sub("_THE_TABLE_", theTable, querySql, fixed=TRUE)
+  querySql <- sub("@THE_TABLE", theTable, querySql, fixed=TRUE)
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
-  query_exec(querySql, project)
+  query_exec(querySql, project, useLegacySql = FALSE)
 }
 ```
 
@@ -87,31 +89,29 @@ result <- DisplayAndDispatchQuery("../sql/sample-variant-counts-for-brca1.sql")
 
 ```
 # Sample variant counts within BRCA1.
-SELECT
-  call_set_name,
-  COUNT(call_set_name) AS variant_count,
-FROM (
+WITH brca1_calls AS (
   SELECT
     reference_name,
     start,
-    END,
+    `end`,
     reference_bases,
-    GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
-    call.call_set_name AS call_set_name,
-    NTH(1,
-      call.genotype) WITHIN call AS first_allele,
-    NTH(2,
-      call.genotype) WITHIN call AS second_allele,
+    ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
+    call.call_set_name,
+    call.genotype[SAFE_ORDINAL(1)] AS first_allele,
+    call.genotype[SAFE_ORDINAL(2)] AS second_allele
   FROM
-      [genomics-public-data:platinum_genomes.variants]
+    `genomics-public-data.platinum_genomes.variants` v, v.call call
   WHERE
-    reference_name CONTAINS '17' # To match both 'chr17' and '17'
-    AND start BETWEEN 41196311
-    AND 41277499
-  HAVING
-    first_allele > 0
-    OR second_allele > 0
-    )
+    reference_name IN ('chr17', '17')
+    AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+)
+
+SELECT
+  call_set_name,
+  COUNT(call_set_name) AS variant_count
+FROM brca1_calls
+WHERE
+    first_allele > 0 OR second_allele > 0
 GROUP BY
   call_set_name
 ORDER BY
@@ -184,33 +184,31 @@ result <- DisplayAndDispatchQuery("../sql/variant-level-data-for-brca1.sql")
 SELECT
   reference_name,
   start,
-  end,
+  `end`,
   reference_bases,
-  GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
+  ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
   quality,
-  GROUP_CONCAT(filter) WITHIN RECORD AS filter,
-  GROUP_CONCAT(names) WITHIN RECORD AS names,
-  COUNT(call.call_set_name) WITHIN RECORD AS num_samples,
+  ARRAY_TO_STRING(v.filter, ',') AS filter,
+  ARRAY_TO_STRING(v.names, ',') AS names,
+  ARRAY_LENGTH(v.call) AS num_samples
 FROM
-  [genomics-public-data:platinum_genomes.variants]
+  `genomics-public-data.platinum_genomes.variants` v
 WHERE
-  reference_name CONTAINS '17' # To match both 'chr17' and '17'
-  AND start BETWEEN 41196311
-  AND 41277499
-# In some datasets, alternate_bases will be empty (therefore NULL) for non-variant segments.
-# In other datasets, alternate_bases will have the value "<NON_REF>" for non-variant segments.
-OMIT RECORD IF EVERY(alternate_bases IS NULL) OR EVERY(alternate_bases = "<NON_REF>")
+  reference_name IN ('17', 'chr17')
+  AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+  # Skip non-variant segments.
+  AND EXISTS (SELECT alt FROM UNNEST(v.alternate_bases) alt WHERE alt NOT IN ("<NON_REF>", "<*>"))
 ORDER BY
   start,
-  alternate_bases
+  alts
 ```
 Number of rows returned by this query: 335.
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
-<!-- Mon Oct  5 16:50:18 2015 -->
+<!-- html table generated in R 3.2.3 by xtable 1.8-2 package -->
+<!-- Tue Nov  8 11:49:54 2016 -->
 <table border=1>
-<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
+<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alts </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196822 </td> <td> CT </td> <td> C </td> <td align="right"> 63.74 </td> <td> LowQD </td> <td>  </td> <td align="right">   1 </td> </tr>
   <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196823 </td> <td> CTT </td> <td> C,CT </td> <td align="right"> 314.59 </td> <td> PASS </td> <td>  </td> <td align="right">   3 </td> </tr>
@@ -231,40 +229,45 @@ result <- DisplayAndDispatchQuery("../sql/sample-level-data-for-brca1.sql")
 SELECT
   reference_name,
   start,
-  end,
+  `end`,
   reference_bases,
-  GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
+  ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
+  quality,
+  ARRAY_TO_STRING(v.filter, ',') AS filters,
+  ARRAY_TO_STRING(v.names, ',') AS names,
   call.call_set_name,
-  GROUP_CONCAT(STRING(call.genotype)) WITHIN call AS genotype,
-  call.phaseset,
-  call.genotype_likelihood,
+  (SELECT STRING_AGG(CAST(gt AS STRING)) from UNNEST(call.genotype) gt) AS genotype
 FROM
-  [genomics-public-data:platinum_genomes.variants]
+  `genomics-public-data.platinum_genomes.variants` v, v.call call
 WHERE
-  reference_name CONTAINS '17' # To match both 'chr17' and '17'
-  AND start BETWEEN 41196311
-  AND 41277499
-HAVING
-  alternate_bases IS NOT NULL
+  reference_name IN ('17', 'chr17')
+  AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+  # Skip non-variant segments.
+  AND EXISTS (SELECT alt FROM UNNEST(v.alternate_bases) alt WHERE alt NOT IN ("<NON_REF>", "<*>"))
 ORDER BY
   start,
-  alternate_bases,
-  call.call_set_name
+  alts,
+  call_set_name
+Running query:   RUNNING  2.4sRunning query:   RUNNING  3.2s
+```
+
+```
+46.3 gigabytes processed
 ```
 Number of rows returned by this query: 1777.
 
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
-<!-- Mon Oct  5 16:50:20 2015 -->
+<!-- html table generated in R 3.2.3 by xtable 1.8-2 package -->
+<!-- Tue Nov  8 11:50:00 2016 -->
 <table border=1>
-<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alternate_bases </th> <th> call_call_set_name </th> <th> genotype </th> <th> call_phaseset </th> <th> call_genotype_likelihood </th>  </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12878 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12880 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12883 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12887 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12888 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td> NA12889 </td> <td> 0,1 </td> <td>  </td> <td align="right">  </td> </tr>
+<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alts </th> <th> quality </th> <th> filters </th> <th> names </th> <th> call_set_name </th> <th> genotype </th>  </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12878 </td> <td> 0,1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12880 </td> <td> 0,1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12883 </td> <td> 0,1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12887 </td> <td> 0,1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12888 </td> <td> 0,1 </td> </tr>
+  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12889 </td> <td> 0,1 </td> </tr>
    </table>
 
 ## Provenance
@@ -276,9 +279,9 @@ sessionInfo()
 ```
 
 ```
-R version 3.2.0 (2015-04-16)
+R version 3.2.3 (2015-12-10)
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
-Running under: OS X 10.10.5 (Yosemite)
+Running under: OS X 10.11.6 (El Capitan)
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -287,15 +290,15 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] xtable_1.7-4    ggplot2_1.0.1   bigrquery_0.1.0 knitr_1.10.5   
+[1] xtable_1.8-2         ggplot2_2.1.0        bigrquery_0.3.0.9000
+[4] knitr_1.13          
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.11.6      rstudioapi_0.3.1 magrittr_1.5     MASS_7.3-40     
- [5] munsell_0.4.2    colorspace_1.2-6 R6_2.1.0         stringr_1.0.0   
- [9] httr_1.0.0       plyr_1.8.2       dplyr_0.4.1      tools_3.2.0     
-[13] parallel_3.2.0   grid_3.2.0       gtable_0.1.2     DBI_0.3.1       
-[17] htmltools_0.2.6  assertthat_0.1   digest_0.6.8     reshape2_1.4.1  
-[21] formatR_1.2      curl_0.9.3       evaluate_0.7.2   rmarkdown_0.7   
-[25] labeling_0.3     stringi_0.5-5    scales_0.2.4     jsonlite_0.9.17 
-[29] proto_0.3-10    
+ [1] Rcpp_0.12.7      magrittr_1.5     munsell_0.4.3    colorspace_1.2-6
+ [5] R6_2.1.2         stringr_1.0.0    httr_1.2.1       plyr_1.8.3      
+ [9] dplyr_0.5.0      tools_3.2.3      grid_3.2.3       gtable_0.2.0    
+[13] DBI_0.5-1        htmltools_0.3.5  openssl_0.9.5    assertthat_0.1  
+[17] digest_0.6.9     tibble_1.2       formatR_1.4      curl_2.2        
+[21] evaluate_0.9     rmarkdown_0.9.6  labeling_0.3     stringi_1.0-1   
+[25] scales_0.4.0     jsonlite_1.1    
 ```

@@ -37,7 +37,7 @@ limitations under the License.
           COUNT(reference_name) AS num_records,
           COUNT(call.call_set_name) AS num_calls
         FROM
-          [_THE_TABLE_]
+          `@THE_TABLE` v, v.call call
         GROUP BY
           reference_name
         ORDER BY
@@ -47,7 +47,7 @@ limitations under the License.
 
     <div class="form-group">
       <label for="queryString">Table</label>
-      <input id="table" class="form-control" type="text" value="genomics-public-data:platinum_genomes.variants">
+      <input id="table" class="form-control" type="text" value="genomics-public-data.platinum_genomes.variants">
     </div>
 
     <div class="form-group">
@@ -85,7 +85,7 @@ if (!clientId) {
 function getResults() {
   $.authGenomics(function() {
     var queryString = $("#queryString").val();
-    queryString = queryString.replace(/_THE_TABLE_/g, $("#table").val());
+    queryString = queryString.replace(/@THE_TABLE/g, $("#table").val());
 
     var projectId = $("#projectId").val();
     if (!projectId) {
