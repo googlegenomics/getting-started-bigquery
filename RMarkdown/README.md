@@ -11,12 +11,12 @@ line by line in R [literate-programming-demo.R](./literate-programming-demo.R)
 
 [literate-programming-demo.md](./literate-programming-demo.md) was created from [literate-programming-demo.Rmd](./literate-programming-demo.Rmd) via
 ```
-require(knitr)
+library(knitr)
 knit("./literate-programming-demo.Rmd")
 ```
 
 [literate-programming-demo.R](./literate-programming-demo.R) was created from [literate-programming-demo.Rmd](./literate-programming-demo.Rmd) via
 ```
-require(knitr)
+library(knitr)
 purl("./literate-programming-demo.Rmd", documentation=1)
 ```

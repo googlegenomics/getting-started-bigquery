@@ -1,29 +1,27 @@
 # Sample variant counts within BRCA1.
-SELECT
-  call_set_name,
-  COUNT(call_set_name) AS variant_count,
-FROM (
+WITH brca1_calls AS (
   SELECT
     reference_name,
     start,
-    END,
+    `end`,
     reference_bases,
-    GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
-    call.call_set_name AS call_set_name,
-    NTH(1,
-      call.genotype) WITHIN call AS first_allele,
-    NTH(2,
-      call.genotype) WITHIN call AS second_allele,
+    ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
+    call.call_set_name,
+    call.genotype[SAFE_ORDINAL(1)] AS first_allele,
+    call.genotype[SAFE_ORDINAL(2)] AS second_allele
   FROM
-      [_THE_TABLE_]
+    `@THE_TABLE` v, v.call call
   WHERE
-    reference_name CONTAINS '17' # To match both 'chr17' and '17'
-    AND start BETWEEN 41196311
-    AND 41277499
-  HAVING
-    first_allele > 0
-    OR second_allele > 0
-    )
+    reference_name IN ('chr17', '17')
+    AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+)
+
+SELECT
+  call_set_name,
+  COUNT(call_set_name) AS variant_count
+FROM brca1_calls
+WHERE
+    first_allele > 0 OR second_allele > 0
 GROUP BY
   call_set_name
 ORDER BY

@@ -3,7 +3,10 @@
  1. If needed, install the [bigrquery](https://github.com/hadley/bigrquery#authentication) package.
  
    ```
-   install.packages("bigrquery")
+    # The currently released version 0.3.0 does not yet have the parameter
+    # to use Standard SQL instead of Legacy SQL, so we install from github.
+    library(devtools)
+    install_github('rstats-db/bigrquery')
    ```
 
  2. From the R prompt set the working directory and run the script:

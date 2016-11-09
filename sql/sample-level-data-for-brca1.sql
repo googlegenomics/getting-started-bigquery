@@ -2,22 +2,22 @@
 SELECT
   reference_name,
   start,
-  end,
+  `end`,
   reference_bases,
-  GROUP_CONCAT(alternate_bases) WITHIN RECORD AS alternate_bases,
+  ARRAY_TO_STRING(v.alternate_bases, ',') AS alts,
+  quality,
+  ARRAY_TO_STRING(v.filter, ',') AS filters,
+  ARRAY_TO_STRING(v.names, ',') AS names,
   call.call_set_name,
-  GROUP_CONCAT(STRING(call.genotype)) WITHIN call AS genotype,
-  call.phaseset,
-  call.genotype_likelihood,
+  (SELECT STRING_AGG(CAST(gt AS STRING)) from UNNEST(call.genotype) gt) AS genotype
 FROM
-  [_THE_TABLE_]
+  `@THE_TABLE` v, v.call call
 WHERE
-  reference_name CONTAINS '17' # To match both 'chr17' and '17'
-  AND start BETWEEN 41196311
-  AND 41277499
-HAVING
-  alternate_bases IS NOT NULL
+  reference_name IN ('17', 'chr17')
+  AND start BETWEEN 41196311 AND 41277499 # per GRCh37
+  # Skip non-variant segments.
+  AND EXISTS (SELECT alt FROM UNNEST(v.alternate_bases) alt WHERE alt NOT IN ("<NON_REF>", "<*>"))
 ORDER BY
   start,
-  alternate_bases,
-  call.call_set_name
+  alts,
+  call_set_name

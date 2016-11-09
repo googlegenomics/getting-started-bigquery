@@ -23,7 +23,7 @@ SELECT
   COUNT(reference_name) AS num_records,
   COUNT(call.call_set_name) AS num_calls
 FROM
-  [genomics-public-data:platinum_genomes.variants]
+  `genomics-public-data.platinum_genomes.variants` v, v.call call
 GROUP BY
   reference_name
 ORDER BY
