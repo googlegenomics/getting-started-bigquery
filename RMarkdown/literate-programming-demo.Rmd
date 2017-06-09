@@ -39,7 +39,6 @@ Next we will load our needed packages into our session:
 ```{r initialize, message=FALSE, warning=FALSE}
 library(bigrquery)
 library(ggplot2)
-library(xtable)
 ```
 
 And set a few variables:
@@ -70,7 +69,7 @@ DisplayAndDispatchQuery <- function(queryUri) {
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
-  query_exec(querySql, project, useLegacySql = FALSE)
+  query_exec(querySql, project, use_legacy_sql = FALSE)
 }
 ```
 
@@ -108,7 +107,7 @@ Number of rows returned by this query: `r nrow(result)`.
 
 Displaying the first few rows of the dataframe of results:
 ```{r echo=FALSE, message=FALSE, warning=FALSE, comment=NA, results="asis"}
-print(xtable(head(result)), type="html", include.rownames=F)
+knitr::kable(head(result))
 ```
 
 
@@ -121,7 +120,7 @@ Number of rows returned by this query: `r nrow(result)`.
 
 Displaying the first few rows of the dataframe of results:
 ```{r echo=FALSE, message=FALSE, warning=FALSE, comment=NA, results="asis"}
-print(xtable(head(result)), type="html", include.rownames=F)
+knitr::kable(head(result))
 ```
 
 ## Provenance

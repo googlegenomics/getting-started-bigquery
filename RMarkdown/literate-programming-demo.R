@@ -32,7 +32,7 @@ DisplayAndDispatchQuery <- function(queryUri) {
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
-  query_exec(querySql, project, useLegacySql = FALSE)
+  query_exec(querySql, project, use_legacy_sql = FALSE)
 }
 
 ## ----comment=NA----------------------------------------------------------

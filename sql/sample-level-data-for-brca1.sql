@@ -1,4 +1,7 @@
-# Retrieve sample-level information for BRCA1 variants.
+#standardSQL
+--
+-- Retrieve sample-level information for BRCA1 variants.
+--
 SELECT
   reference_name,
   start,
@@ -15,7 +18,7 @@ FROM
 WHERE
   reference_name IN ('17', 'chr17')
   AND start BETWEEN 41196311 AND 41277499 # per GRCh37
-  # Skip non-variant segments.
+  -- Skip non-variant segments.
   AND EXISTS (SELECT alt FROM UNNEST(v.alternate_bases) alt WHERE alt NOT IN ("<NON_REF>", "<*>"))
 ORDER BY
   start,

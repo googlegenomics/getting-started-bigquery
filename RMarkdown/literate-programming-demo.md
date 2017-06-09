@@ -41,7 +41,6 @@ Next we will load our needed packages into our session:
 ```r
 library(bigrquery)
 library(ggplot2)
-library(xtable)
 ```
 
 And set a few variables:
@@ -75,7 +74,7 @@ DisplayAndDispatchQuery <- function(queryUri) {
   # Display the updated SQL.
   cat(querySql)
   # Dispatch the query to BigQuery for execution.
-  query_exec(querySql, project, useLegacySql = FALSE)
+  query_exec(querySql, project, use_legacy_sql = FALSE)
 }
 ```
 
@@ -118,6 +117,10 @@ ORDER BY
   call_set_name
 ```
 
+```
+10.7 gigabytes processed
+```
+
 Let us examine our query result:
 
 ```r
@@ -128,10 +131,10 @@ head(result)
   call_set_name variant_count
 1       NA12877            27
 2       NA12878           198
-3       NA12879            37
-4       NA12880           193
-5       NA12881            42
-6       NA12882            31
+3       NA12889           198
+4       NA12890            33
+5       NA12891            37
+6       NA12892           209
 ```
 
 ```r
@@ -140,12 +143,12 @@ summary(result)
 
 ```
  call_set_name      variant_count  
- Length:17          Min.   : 27.0  
- Class :character   1st Qu.: 33.0  
- Mode  :character   Median : 41.0  
-                    Mean   :103.2  
+ Length:6           Min.   : 27.0  
+ Class :character   1st Qu.: 34.0  
+ Mode  :character   Median :117.5  
+                    Mean   :117.0  
                     3rd Qu.:198.0  
-                    Max.   :211.0  
+                    Max.   :209.0  
 ```
 
 ```r
@@ -153,9 +156,9 @@ str(result)
 ```
 
 ```
-'data.frame':	17 obs. of  2 variables:
- $ call_set_name: chr  "NA12877" "NA12878" "NA12879" "NA12880" ...
- $ variant_count: int  27 198 37 193 42 31 197 35 31 29 ...
+'data.frame':	6 obs. of  2 variables:
+ $ call_set_name: chr  "NA12877" "NA12878" "NA12889" "NA12890" ...
+ $ variant_count: int  27 198 198 33 37 209
 ```
 We can see that what we get back from bigrquery is an R dataframe holding our query results.
 
@@ -202,20 +205,22 @@ ORDER BY
   start,
   alts
 ```
-Number of rows returned by this query: 335.
+
+```
+9.9 gigabytes processed
+```
+Number of rows returned by this query: 281.
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.2.3 by xtable 1.8-2 package -->
-<!-- Tue Nov  8 11:49:54 2016 -->
-<table border=1>
-<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alts </th> <th> quality </th> <th> filter </th> <th> names </th> <th> num_samples </th>  </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196822 </td> <td> CT </td> <td> C </td> <td align="right"> 63.74 </td> <td> LowQD </td> <td>  </td> <td align="right">   1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196820 </td> <td align="right"> 41196823 </td> <td> CTT </td> <td> C,CT </td> <td align="right"> 314.59 </td> <td> PASS </td> <td>  </td> <td align="right">   3 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196840 </td> <td align="right"> 41196841 </td> <td> G </td> <td> T </td> <td align="right"> 85.68 </td> <td> TruthSensitivityTranche99.90to100.00,LowQD </td> <td>  </td> <td align="right">   2 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41197273 </td> <td align="right"> 41197274 </td> <td> C </td> <td> A </td> <td align="right"> 1011.08 </td> <td> PASS </td> <td>  </td> <td align="right">   7 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41197938 </td> <td align="right"> 41197939 </td> <td> A </td> <td> AT </td> <td align="right"> 86.95 </td> <td> LowQD </td> <td>  </td> <td align="right">   3 </td> </tr>
-   </table>
+
+|reference_name |    start|      end|reference_bases |alts | quality|filter                                            |names | num_samples|
+|:--------------|--------:|--------:|:---------------|:----|-------:|:-------------------------------------------------|:-----|-----------:|
+|chr17          | 41196407| 41196408|G               |A    |  733.47|PASS                                              |      |           3|
+|chr17          | 41196820| 41196823|CTT             |C,CT |  287.18|PASS                                              |      |           1|
+|chr17          | 41197273| 41197274|C               |A    | 1011.08|PASS                                              |      |           3|
+|chr17          | 41197957| 41197958|G               |T    |  178.48|TruthSensitivityTranche99.90to100.00              |      |           4|
+|chr17          | 41198182| 41198183|A               |C    |   98.02|TruthSensitivityTranche99.00to99.90               |      |           1|
+|chr17          | 41198186| 41198187|A               |C    |    7.68|TruthSensitivityTranche99.90to100.00,LowGQX,LowQD |      |           4|
 
 
 And also work with the sample level data: 
@@ -248,27 +253,24 @@ ORDER BY
   start,
   alts,
   call_set_name
-Running query:   RUNNING  2.4sRunning query:   RUNNING  3.2s
 ```
 
 ```
-46.3 gigabytes processed
+17.0 gigabytes processed
 ```
-Number of rows returned by this query: 1777.
+Number of rows returned by this query: 706.
 
 
 Displaying the first few rows of the dataframe of results:
-<!-- html table generated in R 3.2.3 by xtable 1.8-2 package -->
-<!-- Tue Nov  8 11:50:00 2016 -->
-<table border=1>
-<tr> <th> reference_name </th> <th> start </th> <th> end </th> <th> reference_bases </th> <th> alts </th> <th> quality </th> <th> filters </th> <th> names </th> <th> call_set_name </th> <th> genotype </th>  </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12878 </td> <td> 0,1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12880 </td> <td> 0,1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12883 </td> <td> 0,1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12887 </td> <td> 0,1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12888 </td> <td> 0,1 </td> </tr>
-  <tr> <td> chr17 </td> <td align="right"> 41196407 </td> <td align="right"> 41196408 </td> <td> G </td> <td> A </td> <td align="right"> 733.47 </td> <td> PASS </td> <td>  </td> <td> NA12889 </td> <td> 0,1 </td> </tr>
-   </table>
+
+|reference_name |    start|      end|reference_bases |alts | quality|filters |names |call_set_name |genotype |
+|:--------------|--------:|--------:|:---------------|:----|-------:|:-------|:-----|:-------------|:--------|
+|chr17          | 41196407| 41196408|G               |A    |  733.47|PASS    |      |NA12878       |0,1      |
+|chr17          | 41196407| 41196408|G               |A    |  733.47|PASS    |      |NA12889       |0,1      |
+|chr17          | 41196407| 41196408|G               |A    |  733.47|PASS    |      |NA12892       |0,1      |
+|chr17          | 41196820| 41196823|CTT             |C,CT |  287.18|PASS    |      |NA12889       |1,2      |
+|chr17          | 41197273| 41197274|C               |A    | 1011.08|PASS    |      |NA12878       |0,1      |
+|chr17          | 41197273| 41197274|C               |A    | 1011.08|PASS    |      |NA12889       |0,1      |
 
 ## Provenance
 
@@ -279,9 +281,13 @@ sessionInfo()
 ```
 
 ```
-R version 3.2.3 (2015-12-10)
-Platform: x86_64-apple-darwin13.4.0 (64-bit)
-Running under: OS X 10.11.6 (El Capitan)
+R version 3.4.0 (2017-04-21)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Sierra 10.12.5
+
+Matrix products: default
+BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -290,15 +296,18 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] xtable_1.8-2         ggplot2_2.1.0        bigrquery_0.3.0.9000
-[4] knitr_1.13          
+[1] ggplot2_2.2.1        bigrquery_0.3.0.9000 knitr_1.16          
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.12.7      magrittr_1.5     munsell_0.4.3    colorspace_1.2-6
- [5] R6_2.1.2         stringr_1.0.0    httr_1.2.1       plyr_1.8.3      
- [9] dplyr_0.5.0      tools_3.2.3      grid_3.2.3       gtable_0.2.0    
-[13] DBI_0.5-1        htmltools_0.3.5  openssl_0.9.5    assertthat_0.1  
-[17] digest_0.6.9     tibble_1.2       formatR_1.4      curl_2.2        
-[21] evaluate_0.9     rmarkdown_0.9.6  labeling_0.3     stringi_1.0-1   
-[25] scales_0.4.0     jsonlite_1.1    
+ [1] Rcpp_0.12.11      magrittr_1.5      progress_1.1.2   
+ [4] munsell_0.4.3     colorspace_1.3-2  R6_2.2.1         
+ [7] rlang_0.1.1       highr_0.6         stringr_1.2.0    
+[10] httr_1.2.1        plyr_1.8.4        tools_3.4.0      
+[13] grid_3.4.0        gtable_0.2.0      DBI_0.6-1        
+[16] htmltools_0.3.6   rprojroot_1.2     digest_0.6.12    
+[19] openssl_0.9.6     lazyeval_0.2.0    assertthat_0.2.0 
+[22] tibble_1.3.3      curl_2.6          evaluate_0.10    
+[25] rmarkdown_1.5     labeling_0.3      stringi_1.1.5    
+[28] compiler_3.4.0    backports_1.1.0   scales_0.4.1     
+[31] prettyunits_1.0.2 jsonlite_1.5     
 ```
