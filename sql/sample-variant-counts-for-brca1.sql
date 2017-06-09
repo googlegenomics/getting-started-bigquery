@@ -1,4 +1,7 @@
-# Sample variant counts within BRCA1.
+#standardSQL
+--
+-- Sample variant counts within BRCA1.
+--
 WITH brca1_calls AS (
   SELECT
     reference_name,

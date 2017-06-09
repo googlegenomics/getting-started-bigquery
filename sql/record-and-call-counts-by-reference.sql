@@ -1,4 +1,7 @@
-# Count the number of records and nested calls for each reference.
+#standardSQL
+--
+-- Count the number of records and nested calls for each reference.
+--
 SELECT
   reference_name,
   COUNT(reference_name) AS num_records,
